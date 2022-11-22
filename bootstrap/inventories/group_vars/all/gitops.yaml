@@ -1,0 +1,6 @@
+---
+
+# Relative to the playbook directory level
+gitops_base: "{{ playbook_dir }}/../../../gitops"
+
+

@@ -1,0 +1,104 @@
+
+# Reference:
+# - https://docs.ansible.com/ansible/latest/collections/kubernetes/core/docsite/kubernetes_scenarios/scenario_k8s_object.html 
+# - https://github.com/ansible-collections/kubernetes.core
+# - https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_info_module.html 
+# - https://www.densify.com/articles/scaling-openshift-container-resources-ansible 
+
+- hosts: bastion
+  gather_facts: true
+  collections: 
+  - kubernetes.core
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - k8s_info:
+      kind: Config
+      api_version: operator.openshift.io/v1
+    register: cluster_config
+
+  - name: Get cluster version
+    k8s_info:
+      kind: ClusterVersion
+      api_version: config.openshift.io/v1
+    register: cluster_version  
+
+  - name: Get cluster component status
+    k8s_info:
+      kind: ComponentStatus
+      api_version: v1
+    register: cluster_status  
+
+  - name: Get nodes
+    k8s_info:
+      kind: Node
+      api_version: v1
+    register: k8s_nodes  
+
+  - name: Get ceph capacity
+    k8s_info:
+      kind: CephCluster
+      api_version: ceph.rook.io/v1
+    register: ceph_state   
+
+  - name: Set Cluster Facts
+    set_fact:
+      cluster_info:
+        current_version: "{{ cluster_version.resources[0].status.desired.version }}"
+        channel: "{{ cluster_version.resources[0].spec.channel }}"
+        uid: "{{ cluster_config.resources[0].metadata.uid }}"
+        status: |
+          {{ cluster_status | 
+             json_query('
+              resources[*].{ 
+                name: metadata.name, 
+                health: conditions[0].message 
+              }
+            ') 
+          }}
+        nodes: |
+          {{ k8s_nodes | 
+             json_query('
+              resources[*].{ 
+                name: metadata.name, 
+                uid: metadata.uid, 
+                ip: status.addresses[*].address,
+                vcpus: status.capacity.cpu,
+                ram: status.capacity.memory,
+                chip_arch: metadata.labels."kubernetes.io/arch"
+                rack: metadata.labels."topology.rook.io/rack"
+              }
+            ') 
+          }}
+        disk: |
+          {{ ceph_state.resources[0] | 
+             json_query('
+              { 
+                total: status.ceph.capacity.bytesTotal, 
+                available: status.ceph.capacity.bytesAvailable, 
+                used: status.ceph.capacity.bytesUsed
+              }
+            ') 
+          }}          
+
+
+  - name: Print gathered facts
+    debug:
+      msg:
+      - "{{ cluster_info }}"
+
+  # - name: Print gathered info in full
+  #   debug:
+  #     msg:
+  #     - "=== cluster_config ========================================="
+  #     - "{{ cluster_config }}"
+  #     - "=== cluster_version ========================================"
+  #     - "{{ cluster_version }}"
+  #     - "=== k8s_nodes =============================================="
+  #     - "{{ k8s_nodes }}"
+  #     - "=== ceph_state ============================================="
+  #     - "{{ ceph_state }}"
+
+
+

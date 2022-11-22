@@ -1,0 +1,18 @@
+
+- hosts: bastion
+  gather_facts: true
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - name: Print bastion host details
+    shell: |
+      echo "$ uname -a"
+      uname -a
+      echo 
+      echo "$ cat /etc/os-release"
+      cat /etc/os-release
+    register: bastion_info
+
+  - debug:
+      msg: "{{ bastion_info.stdout }}"

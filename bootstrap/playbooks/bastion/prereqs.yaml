@@ -1,0 +1,51 @@
+
+- hosts: bastion
+  gather_facts: true
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - name: Install packages
+    become: yes
+    dnf:
+      name: "{{packages}}"
+      state: present
+    vars:
+      packages:
+      - git
+      - podman
+      - python3-pip
+      # - ansible
+
+  # - name: Install openshift client
+  #   become: yes
+  #   ansible.builtin.dnf:
+  #     name: openshift-clients
+  #     enablerepo: rhocp-4.11-for-rhel-8-x86_64-rpms
+  #     state: present
+
+  - name: Installing pip modules
+    become: true
+    pip: 
+      name: 
+        - ansible
+        - openshift
+        # - kubernetes
+
+  - name: Print bastion package version details
+    register: bastion_pkg_info
+    shell: |
+      echo 
+      echo "$ python3 --version"
+      python3 --version
+      echo 
+      echo "$ ansible --version"
+      ansible --version
+      echo 
+      echo "$ git --version"
+      git --version
+      echo 
+      echo "$ oc version"
+      oc version
+
+

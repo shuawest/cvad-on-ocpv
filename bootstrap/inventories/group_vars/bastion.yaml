@@ -1,0 +1,6 @@
+
+# ansible_host: "{{ targetenv.bastion_host }}"
+ansible_connection: ssh 
+ansible_hostname: "{{ targetenv.bastion_host }}"
+ansible_ssh_user: "{{ targetenv.bastion_user }}"
+ansible_ssh_pass: "{{ targetenv.bastion_pass }}"

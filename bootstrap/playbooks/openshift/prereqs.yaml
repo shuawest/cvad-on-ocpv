@@ -1,0 +1,36 @@
+
+- hosts: bastion
+  gather_facts: true
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - name: Ensure the .kube directory exits
+    file: 
+      path: ~/.kube
+      state: directory
+      owner: "{{ targetenv.bastion_user }}"
+      group: users
+      mode: '0750'
+
+  - name: Copy kubeconfig to local user path
+    become: yes
+    copy: 
+      src: /home/lab-user/install/auth/kubeconfig
+      remote_src: yes
+      dest: /home/{{ targetenv.bastion_user }}/.kube/config
+      owner: "{{ targetenv.bastion_user }}"
+      group: users
+      mode: '0640'
+
+  - name: Get OpenShift Cluster Info
+    k8s_info:
+      kind: Pod
+    register: pod_list
+
+  - name: Print OpenShift Cluster Info
+    debug:
+      msg:
+      - "{{ pod_list }}"
+
+
