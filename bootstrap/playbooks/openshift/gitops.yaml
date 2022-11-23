@@ -7,18 +7,16 @@
   - "{{ secrets_file }}"
   tasks: 
 
-  - name: Create openshift-gitops namespace
-    kubernetes.core.k8s:
-      name: openshift-gitops
-      api_version: v1
-      kind: Namespace
-      state: present
-
   - name: Apply OpenShift-GitOps manifests
     kubernetes.core.k8s:
       definition: "{{ lookup('template', '{{ gitops_base }}/bootstrap/{{ item }}') | from_yaml }}"
       state: present
     with_items: 
-    - openshift-gitops.yaml
+    - gitops-ns.yaml
+    - openshift-gitops-subscription.yaml
     - rbac.yaml
-
+    - argocd.yaml
+    - cvad-on-ocpv-project.yaml
+    - app-aap.yaml
+    - app-ocpv.yaml
+    - aap-cvad.yaml

@@ -1,0 +1,18 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ocpv
+  namespace: openshift-gitops
+spec:
+  project: ocpv-on-ocpv
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: gitops/ocpv
+    repoURL: 'git@github.com:shuawest/cvad-on-ocpv.git'
+    targetRevision: HEAD

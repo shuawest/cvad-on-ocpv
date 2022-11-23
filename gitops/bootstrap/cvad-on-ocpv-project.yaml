@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cvad-on-ocpv
+  namespace: openshift-gitops
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  description: Citrix Virtual Apps & Desktops (CVAD) on OpenShift Virtualization (OCPv)
+  destinations:
+    - name: in-cluster
+      namespace: '*'
+      server: 'https://kubernetes.default.svc'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  sourceRepos:
+    - 'git@github.com:shuawest/cvad-on-ocpv.git'

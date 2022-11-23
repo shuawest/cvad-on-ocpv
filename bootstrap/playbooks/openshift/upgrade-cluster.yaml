@@ -1,0 +1,10 @@
+
+- hosts: bastion
+  gather_facts: true
+  collections: 
+  - kubernetes.core
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  # TODO: update the ClusterVersion to the target version and channel

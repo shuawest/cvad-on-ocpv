@@ -72,7 +72,7 @@
             ') 
           }}
         disk: |
-          {{ ceph_state.resources[0] | 
+          {{ ceph_state.resources[0] | default({}) |
              json_query('
               { 
                 total: status.ceph.capacity.bytesTotal, 

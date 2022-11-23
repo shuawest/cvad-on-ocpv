@@ -24,7 +24,7 @@
   #     enablerepo: rhocp-4.11-for-rhel-8-x86_64-rpms
   #     state: present
 
-  - name: Installing pip modules
+  - name: Install pip modules
     become: true
     pip: 
       name: 
