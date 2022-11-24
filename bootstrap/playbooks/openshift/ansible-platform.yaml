@@ -1,0 +1,19 @@
+
+- hosts: bastion
+  gather_facts: true
+  collections: 
+  - kubernetes.core
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - name: Apply Ansible Automation Platform manifests
+    kubernetes.core.k8s:
+      definition: "{{ lookup('template', '{{ gitops_base }}/aap/{{ item }}') | from_yaml }}"
+      state: present
+    with_items: 
+    - ansible-ns.yaml
+    - ansible-operator-group.yaml
+    - ansible-subscription.yaml
+    - ansible-controller-instance.yaml
+

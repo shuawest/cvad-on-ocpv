@@ -121,7 +121,12 @@ Alternatively consider creating a File share in ODF with these images mountable 
 Otherwise, load and provide them directly in OCP-Virt*
 
 
- 
+# Examples
+
+ansible-playbook --extra-vars "secrets_file=/Users/jowest/dev/repos/cvad-on-ocpv/env-khgqr-metal.yaml" -i inventories/hosts-khgqr.ini playbooks/openshift/gitops.yaml
+
+ansible-playbook --extra-vars "secrets_file=/Users/jowest/dev/repos/cvad-on-ocpv/env-khgqr-metal.yaml" -i inventories/hosts-khgqr.ini playbooks/openshift/ansible-platform.yaml
+
 
 
 

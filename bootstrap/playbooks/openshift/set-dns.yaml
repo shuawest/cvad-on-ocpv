@@ -1,0 +1,12 @@
+
+# Configuring a private cluster
+# https://docs.openshift.com/container-platform/4.11/post_installation_configuration/configuring-private-cluster.html#configuring-private-cluster
+
+
+oc get dnses.config.openshift.io/cluster -o yaml
+
+oc patch dnses.config.openshift.io/cluster --type=merge --patch='{"spec": {"publicZone": null}}'
+dns.config.openshift.io/cluster patched
+
+
+

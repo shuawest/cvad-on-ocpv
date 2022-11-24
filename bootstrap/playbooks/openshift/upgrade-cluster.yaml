@@ -1,4 +1,7 @@
 
+# Updating a cluster using the CLI
+# https://docs.openshift.com/container-platform/4.10/updating/updating-cluster-cli.html
+
 - hosts: bastion
   gather_facts: true
   collections: 
@@ -7,4 +10,46 @@
   - "{{ secrets_file }}"
   tasks: 
 
-  # TODO: update the ClusterVersion to the target version and channel
+  # Upgrading clusters with manually maintained credentials
+  #
+  #   oc edit cloudcredential cluster
+  #
+  # add the annotation
+  #   metadata:
+  #     annotations:
+  #       cloudcredential.openshift.io/upgradeable-to: <version_number>
+
+  # Pausing a MachineHealthCheck resource
+  # During the upgrade process, nodes in the cluster might become temporarily unavailable. 
+  # In the case of worker nodes, the machine health check might identify such nodes as 
+  # unhealthy and reboot them. To avoid rebooting such nodes, pause all the 
+  # MachineHealthCheck resources before updating the cluster.
+  # 
+  #   oc get machinehealthcheck -n openshift-machine-api
+  #
+  # grab the mhc name from the result
+  # Add the paused annoation to the mhc resource
+  # 
+  #   oc -n openshift-machine-api annotate mhc <mhc-name> cluster.x-k8s.io/paused=""
+  # 
+
+  # get the cluster's current version
+  #   oc get clusterversion
+  #
+  # Check the available upgrade versions
+  #   oc adm upgrade  
+  # 
+  # Set the upgrade channel 
+  #   oc adm upgrade channel stable-4.11
+
+  # Get the current z stream version, and state
+  #   oc get clusterversion -o json|jq ".items[0].status.history"
+
+  # syntax for applying patch to a manifest
+  #   oc patch clusterversion/version --patch '{"spec":{"upstream":"<update-server-url>"}}' --type=merge
+
+
+  # Remove the MachineHealthCheck paused annotation
+  #   oc -n openshift-machine-api annotate mhc <mhc-name> cluster.x-k8s.io/paused-
+
+  

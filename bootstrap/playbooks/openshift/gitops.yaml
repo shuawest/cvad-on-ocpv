@@ -17,6 +17,6 @@
     - rbac.yaml
     - argocd.yaml
     - cvad-on-ocpv-project.yaml
-    - app-aap.yaml
+    - app-ansible.yaml
     - app-ocpv.yaml
-    - aap-cvad.yaml
+    - app-cvad.yaml

@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-gitops
 spec:
   server:
-    host: "openshift-gitops.apps.{{ targetenv.ocp.base_domain }}"
+    host: "openshift-gitops.{{ targetenv.ocp.base_domain }}"
     autoscale:
       enabled: false
     grpc:
@@ -44,6 +44,9 @@ spec:
     sharding: {}
   dex:
     openShiftOAuth: true
+    groups:
+    - argocdadmins
+    - argocdusers
     resources:
       limits:
         cpu: 500m
@@ -111,9 +114,4 @@ spec:
       - PipelineRun
   tls:
     ca: {}
-  # oidcConfig: |
-  #   name: {{ argocd_server.sso_name }}
-  #   issuer: {{ argocd_server.sso_issuer }}
-  #   clientID: {{ argocd_server.sso_client_id }}
-  #   clientSecret: {{ lookup(vault_read, argocd_server.sso_client_secret_key, url=vault_server.url, auth_method='userpass', username=vault.user, password=vault_user_pass ).data.secret }}
-  #   requestedScopes: ["openid","profile","email","groups","offline_access"]
+  

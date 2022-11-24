@@ -23,14 +23,14 @@
       group: users
       mode: '0640'
 
-  - name: Get OpenShift Cluster Info
+  - name: Get cluster version
     k8s_info:
-      kind: Pod
-    register: pod_list
+      kind: ClusterVersion
+      api_version: config.openshift.io/v1
+    register: cluster_version  
 
-  - name: Print OpenShift Cluster Info
+  - name: Print gathered facts
     debug:
       msg:
-      - "{{ pod_list }}"
-
+      - "OpenShift version: {{ cluster_version.resources[0].status.desired.version }}"
 
