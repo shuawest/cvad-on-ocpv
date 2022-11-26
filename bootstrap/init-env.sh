@@ -8,6 +8,9 @@ read GUID
 echo "bastion password: "
 read BASTION_PASS
 
+echo "openshift password: "
+read OCP_PASS
+
 IP_ADDR=`dig +short console-openshift-console.apps.$GUID.dynamic.opentlc.com | grep -v '.com'`
 
 cat <<EOT > $SCRIPT_DIR/../env-$GUID.yaml
@@ -24,7 +27,7 @@ targetenv:
     console: https://console-openshift-console.apps.$GUID.dynamic.opentlc.com/
     api: "https://api.ocp.example.com:6443"
     user: developer
-    pass: r3dh4t1! 
+    pass: $OCP_PASS 
 EOT
 
 cat <<EOT > $SCRIPT_DIR/inventories/hosts-$GUID.ini

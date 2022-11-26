@@ -19,8 +19,8 @@
 #  x) Update baseDomain of clsuer DNS 
 #    This does not work, changing the base doamin post-install is not supported: https://access.redhat.com/solutions/4853401
 #    Chaning the ingress domain may a better affect
-#  2) Try updading to the opentlc.com address
-#  3) Try updating to the custom milabs.io address
+#  2) Try updading ingress to the opentlc.com address
+#  3) Try updating ingress to the custom milabs.io address
 #  after update check Oauth address
 
 - hosts: bastion
@@ -31,13 +31,33 @@
   - "{{ secrets_file }}"
   tasks: 
 
-  - name: Patch OCP Cluster DNS base domain
+  # NOTE: cluster base domain should not be changed
+  # - name: Patch OCP Cluster DNS base domain
+  #   kubernetes.core.k8s_json_patch:
+  #     kind: DNS
+  #     api_version: config.openshift.io/v1
+  #     name: cluster
+  #     patch:
+  #       - op: replace
+  #         patch: /spec/baseDomain
+  #         value: "{{ targetenv.ocp.new_domain }}"
+
+  - name: Patch OCP Cluster DNS base domain to opentlc dynamic address
     kubernetes.core.k8s_json_patch:
-      kind: DNS
+      kind: Ingress
       api_version: config.openshift.io/v1
       name: cluster
       patch:
         - op: replace
-          patch: /spec/baseDomain
-          value: "{{ targetenv.ocp.new_domain }}"
+          patch: /spec/domain
+          value: "{{ targetenv.ocp.base_domain }}"
 
+  # - name: Patch OCP Cluster DNS base domain to custom base domain (requires update to route53 IP address)
+  #   kubernetes.core.k8s_json_patch:
+  #     kind: Ingress
+  #     api_version: config.openshift.io/v1
+  #     name: cluster
+  #     patch:
+  #       - op: replace
+  #         patch: /spec/domain
+  #         value: "apps.{{ targetenv.ocp.new_domain }}"

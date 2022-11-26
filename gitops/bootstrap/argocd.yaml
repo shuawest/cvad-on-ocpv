@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-gitops
 spec:
   server:
-    host: "openshift-gitops.{{ targetenv.ocp.base_domain }}"
+    # host: "openshift-gitops.{{ targetenv.ocp.base_domain }}"
     autoscale:
       enabled: false
     grpc:

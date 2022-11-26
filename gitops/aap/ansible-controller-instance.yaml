@@ -5,8 +5,8 @@ metadata:
   name: ansible-automation-platform
   namespace: ansible-automation-platform
 spec:
-  hostname: "ansible-automation.{{ targetenv.ocp.base_domain }}"
-  route_host: "ansible-automation.{{ targetenv.ocp.base_domain }}"
+  # hostname: "ansible-automation.{{ targetenv.ocp.base_domain }}"
+  # route_host: "ansible-automation.{{ targetenv.ocp.base_domain }}"
   admin_email: jowest@redhat.com
   create_preload_data: true
   route_tls_termination_mechanism: Edge
