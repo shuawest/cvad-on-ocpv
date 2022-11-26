@@ -1,3 +1,3 @@
 #!/bin/sh
 
-export ENV_GUID=k74sq
+export ENV_GUID=gz85v

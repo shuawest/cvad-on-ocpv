@@ -8,6 +8,10 @@ read GUID
 echo "bastion password: "
 read BASTION_PASS
 
+OCP_USER="kubeadmin"
+
+ssh -o StrictHostKeyChecking=no $GUID-user@provision.$GUID.dynamic.opentlc.com "sudo cat /home/lab-user/install/auth/kubeadmin-password"
+
 echo "openshift password: "
 read OCP_PASS
 
@@ -26,7 +30,7 @@ targetenv:
     base_domain: apps.$GUID.dynamic.opentlc.com
     console: https://console-openshift-console.apps.$GUID.dynamic.opentlc.com/
     api: "https://api.ocp.example.com:6443"
-    user: developer
+    user: $OCP_USER
     pass: $OCP_PASS 
 EOT
 

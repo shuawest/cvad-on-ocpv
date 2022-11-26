@@ -21,6 +21,10 @@
 #    Chaning the ingress domain may a better affect
 #  2) Try updading ingress to the opentlc.com address
 #  3) Try updating ingress to the custom milabs.io address
+#  4) Try configuring an OAuth client for GitOps and AAP to ensure the redirct works
+#       https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html-single/authentication_and_authorization/index#oauth-register-additional-client_configuring-oauth-clients
+#  5) Try to configure the External DNS opeator
+#      https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html/networking/external-dns-operator-1#external-dns-operator
 #  after update check Oauth address
 
 - hosts: bastion
