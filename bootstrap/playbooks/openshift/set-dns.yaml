@@ -1,12 +1,43 @@
 
 # Configuring a private cluster
 # https://docs.openshift.com/container-platform/4.11/post_installation_configuration/configuring-private-cluster.html#configuring-private-cluster
+# k8s patch
+# https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_json_patch_module.html#ansible-collections-kubernetes-core-k8s-json-patch-module
 
 
-oc get dnses.config.openshift.io/cluster -o yaml
+# oc get dnses.config.openshift.io/cluster -o yaml
 
-oc patch dnses.config.openshift.io/cluster --type=merge --patch='{"spec": {"publicZone": null}}'
-dns.config.openshift.io/cluster patched
+# oc patch dnses.config.openshift.io/cluster --type=merge --patch='{"spec": {"baseDomain": "2pqmt.milabs.io"}}'
+# dns.config.openshift.io/cluster patched
 
+# oc get machine -n openshift-machine-api
 
+# Try changing just the ingress instead of the base domain
+#  oc get ingresses.config.openshift.io/cluster -o yaml 
+#  https://access.redhat.com/solutions/6978839
+#  you may need to also update the Certs during the update
+#  x) Update baseDomain of clsuer DNS 
+#    This does not work, changing the base doamin post-install is not supported: https://access.redhat.com/solutions/4853401
+#    Chaning the ingress domain may a better affect
+#  2) Try updading to the opentlc.com address
+#  3) Try updating to the custom milabs.io address
+#  after update check Oauth address
+
+- hosts: bastion
+  gather_facts: true
+  collections: 
+  - kubernetes.core
+  vars_files: 
+  - "{{ secrets_file }}"
+  tasks: 
+
+  - name: Patch OCP Cluster DNS base domain
+    kubernetes.core.k8s_json_patch:
+      kind: DNS
+      api_version: config.openshift.io/v1
+      name: cluster
+      patch:
+        - op: replace
+          patch: /spec/baseDomain
+          value: "{{ targetenv.ocp.new_domain }}"
 
