@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-gitops
 spec:
   server:
-    # host: "openshift-gitops.{{ targetenv.ocp.base_domain }}"
+    host: "openshift-gitops.{{ targetenv.ocp.base_domain }}"
     autoscale:
       enabled: false
     grpc:
@@ -22,6 +22,11 @@ spec:
         memory: 128Mi
     route:
       enabled: true
+      path: /
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: passthrough
+      wildcardPolicy: None
     service:
       type: ""
   applicationSet:
@@ -45,6 +50,7 @@ spec:
   dex:
     openShiftOAuth: true
     groups:
+    - default
     - argocdadmins
     - argocdusers
     resources:
@@ -84,6 +90,7 @@ spec:
     route:
       enabled: false
   rbac:
+    defaultPolicy: 'role:readonly'
     policy: |
       g, system:cluster-admins, role:admin
       g, cluster-admins, role:admin

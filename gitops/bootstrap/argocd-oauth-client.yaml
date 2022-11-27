@@ -1,0 +1,9 @@
+kind: OAuthClient
+apiVersion: oauth.openshift.io/v1
+metadata:
+  name: argocd-oauth-client
+  namespace: openshift-gitops
+secret: "argocd-oauth-client-secret" 
+redirectURIs:
+ - "openshift-gitops.{{ targetenv.ocp.base_domain }}"
+grantMethod: prompt

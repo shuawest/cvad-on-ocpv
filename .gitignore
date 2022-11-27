@@ -1,5 +1,7 @@
 
 env-*.yaml
+remote-user.sh
+env-defaults.sh
 
 isos
 
