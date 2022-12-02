@@ -15,7 +15,8 @@
     - gitops-ns.yaml
     - openshift-gitops-subscription.yaml
     - rbac.yaml
-    - argocd.yaml
+    - argocd.yaml.j2
+    - argocd-oauth-client.yaml.j2
     - cvad-on-ocpv-project.yaml
     - app-ansible.yaml
     - app-ocpv.yaml

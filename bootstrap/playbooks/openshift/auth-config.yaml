@@ -1,0 +1,45 @@
+---
+
+# Adds users, groups, and roles from the env-auth.yaml file in the root directory
+# NOTE: see env-auth.yaml.tmlp for instructions 
+
+- hosts: bastion
+  gather_facts: true
+  collections: 
+  - kubernetes.core
+  vars_files: 
+  - "{{ secrets_file }}"
+  - "{{ env_auth_secrets }}"
+  tasks: 
+
+  - name: Get the existing htpasswd file
+    shell: |
+      oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode > users.htpasswd
+
+  - name: Add users to htpasswd
+    shell: |
+      htpasswd -bB users.htpasswd {{ item.user }} {{ item.pass }}
+    no_log: true
+    with_items: "{{ env_users }}"
+
+  - name: Update htpasswd in OpenShift
+    shell: |
+      oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
+
+  - name: Create groups from template
+    kubernetes.core.k8s:
+      definition: "{{ lookup('template', '{{ gitops_base }}/bootstrap/group.yaml.j2') | from_yaml }}"
+      state: present
+    vars:
+      group_name: "{{ item.name }}"
+      group_user_list: "{{ item.users }}"
+    with_items: "{{ env_groups }}" 
+
+  - name: Create rolebindings from template
+    kubernetes.core.k8s:
+      definition: "{{ lookup('template', '{{ gitops_base }}/bootstrap/role-binding.yaml.j2') | from_yaml }}"
+      state: present
+    vars:
+      group_name: "{{ item.group }}"
+      role_name: "{{ item.role }}"
+    with_items: "{{ env_rolebindings }}" 

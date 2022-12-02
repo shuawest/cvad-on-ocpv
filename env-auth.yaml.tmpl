@@ -1,0 +1,20 @@
+
+# Copy and rename this file to env-users.yaml, and ensure the .gitignore avoids
+# use ansble-vault create env-users.yaml to encrypt it locally.
+
+env_groups:
+  - name: argocdadmins
+  - name: argocdusers
+  - name: clusteradmins
+    role: cluster-admin
+
+env_users:
+  - user: jowestadmin
+    pass: <put-pass-here>
+    groups: 
+      - argocdadmins
+      - clusteradmins
+  - user: jowestdev
+    pass: <put-pass-here>
+      - argocdusers
+

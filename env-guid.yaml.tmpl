@@ -1,0 +1,22 @@
+
+# OpenShift Lab environment details
+# 1. run `init-env.sh` to generate this configuration by specifying the guid and bastion password interactively
+# 2. the template file is saved in the root directory as `env-<guid>.yaml` and is ignored by git
+# 3. to ensure the password isn't released the file can encrypted with `ansible-vault create env-<guid>.yaml`
+
+targetenv:
+  guid: 
+  bastion_host: 
+  bastion_user: 
+  bastion_pass: 
+  ocp:
+    cluster_ip: 
+    new_domain: 
+    new_console: 
+    base_domain: 
+    console: 
+    api: "https://api.ocp.example.com:6443"
+    user: kubeadmin
+    pass: 
+
+

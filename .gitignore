@@ -1,7 +1,9 @@
 
 env-*.yaml
+env-*.sh
 remote-user.sh
 env-defaults.sh
+aws-secrets.sh
 
 isos
 

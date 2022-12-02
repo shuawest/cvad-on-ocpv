@@ -53,13 +53,15 @@ EOT
 
 chmod a+x $SCRIPT_DIR/env-defaults.sh
 
-$SCRIPT_DIR/ap.sh bootstrap/playbooks/bastion/test.yaml
+pushd $SCRIPT_DIR/bootstrap/
 
-$SCRIPT_DIR/ap.sh bootstrap/playbooks/bastion/prereqs.yaml
+./ap.sh playbooks/bastion/test.yaml
 
-$SCRIPT_DIR/ap.sh bootstrap/playbooks/openshift/prereqs.yaml
+./ap.sh playbooks/bastion/prereqs.yaml
 
-$SCRIPT_DIR/ap.sh bootstrap/playbooks/openshift/facts.yaml
+./ap.sh playbooks/openshift/prereqs.yaml
 
+./ap.sh playbooks/openshift/facts.yaml
 
+popd
 
