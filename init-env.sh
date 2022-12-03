@@ -29,7 +29,7 @@ targetenv:
     console: https://console-openshift-console.apps.$GUID.dynamic.opentlc.com/
     api: "https://api.ocp.example.com:6443"
     user: $OCP_USER
-    pass: $OCP_PASS 
+    pass: $OCP_PASS
 EOT
 
 cat <<EOT > $SCRIPT_DIR/bootstrap/inventories/hosts-$GUID.ini
